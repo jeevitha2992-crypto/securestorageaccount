@@ -1,0 +1,70 @@
+┌───────────────────────────────────────────────┐
+│                Azure Subscription             │
+└───────────────────────────────────────────────┘
+                        │
+                        ▼
+┌───────────────────────────────────────────────┐
+│ Resource Group: RG-STORAGE-SECURITY           │
+└───────────────────────────────────────────────┘
+                        │
+      ┌─────────────────┴─────────────────┐
+      │                                   │
+      ▼                                   ▼
+
+┌─────────────────────┐       ┌──────────────────────┐
+│ Azure Entra ID User │       │ Azure VM            │
+│                     │       │ VM-Storage-Test     │
+└──────────┬──────────┘       └──────────┬──────────┘
+           │                             │
+           │ RBAC                        │
+           │                             │
+           ▼                             ▼
+
+┌─────────────────────────────────────────────────┐
+│ Storage Account: stsecureproject001             │
+│                                                 │
+│ • Public Network Access = Disabled              │
+│ • Firewall = Enabled                            │
+│ • Blob Storage                                  │
+│ • Anonymous Access = Disabled                   │
+└─────────────────┬───────────────────────────────┘
+                  │
+                  │ Private Endpoint
+                  ▼
+
+┌─────────────────────────────────────┐
+│ Private Endpoint                    │
+│ PE-Storage                          │
+│ Private IP: 10.x.x.x                │
+└─────────────────┬───────────────────┘
+                  │
+                  ▼
+
+┌─────────────────────────────────────┐
+│ Virtual Network                     │
+│ VNet-Storage                        │
+│ 10.0.0.0/16                         │
+│                                     │
+│ Subnet: Workload-Subnet             │
+│ 10.0.1.0/24                         │
+└─────────────────────────────────────┘
+
+
+RBAC:
+------
+Storage Blob Data Reader
+Storage Blob Data Contributor
+
+
+Secure Access Methods:
+----------------------
+1. Azure RBAC Authentication
+2. Blob SAS Token Access
+3. Private Endpoint Connectivity
+
+
+Blocked:
+--------
+✖ Public Internet Access
+✖ Anonymous Blob Access
+✖ Unauthorized Users
