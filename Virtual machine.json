@@ -1,0 +1,95 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_VM_Storage_Test_name": {
+            "defaultValue": "VM-Storage-Test",
+            "type": "String"
+        },
+        "disks_VM_Storage_Test_OsDisk_1_0e187df86ec94e698520233a1b4302a8_externalid": {
+            "defaultValue": "/subscriptions/3e0d8ff6-ccdf-4122-8b13-ac620d3c1dd7/resourceGroups/RG-STORAGE-SECURITY/providers/Microsoft.Compute/disks/VM-Storage-Test_OsDisk_1_0e187df86ec94e698520233a1b4302a8",
+            "type": "String"
+        },
+        "networkInterfaces_vm_storage_test374_externalid": {
+            "defaultValue": "/subscriptions/3e0d8ff6-ccdf-4122-8b13-ac620d3c1dd7/resourceGroups/RG-STORAGE-SECURITY/providers/Microsoft.Network/networkInterfaces/vm-storage-test374",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2025-11-01",
+            "name": "[parameters('virtualMachines_VM_Storage_Test_name')]",
+            "location": "centralindia",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2alds_v6"
+                },
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2025-datacenter-g2",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_VM_Storage_Test_name'), '_OsDisk_1_0e187df86ec94e698520233a1b4302a8')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS",
+                            "id": "[parameters('disks_VM_Storage_Test_OsDisk_1_0e187df86ec94e698520233a1b4302a8_externalid')]"
+                        },
+                        "deleteOption": "Delete",
+                        "diskSizeGB": 127
+                    },
+                    "dataDisks": [],
+                    "diskControllerType": "NVMe"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_VM_Storage_Test_name')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByOS",
+                            "assessmentMode": "ImageDefault",
+                            "enableHotpatching": false
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true,
+                    "adminUsername": "AzureUser"
+                },
+                "securityProfile": {
+                    "uefiSettings": {
+                        "secureBootEnabled": true,
+                        "vTpmEnabled": true
+                    },
+                    "securityType": "TrustedLaunch"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_vm_storage_test374_externalid')]",
+                            "properties": {
+                                "deleteOption": "Delete"
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        }
+    ]
+}
